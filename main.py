@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from database import Base, engine
 from routers import transactions
@@ -22,7 +25,6 @@ app.add_middleware(
 
 app.include_router(transactions.router)
 
-
-@app.get("/")
-def root():
-    return {"message": "API Finanzas Personales - /docs para Swagger"}
+frontend = Path(__file__).parent / "frontend"
+if frontend.exists():
+    app.mount("/", StaticFiles(directory=str(frontend), html=True), name="frontend")
