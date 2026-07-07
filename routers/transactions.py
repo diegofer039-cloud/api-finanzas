@@ -1,6 +1,9 @@
+import csv
+import io
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -40,6 +43,37 @@ def list_transactions(
     if date_to:
         q = q.filter(Transaction.date <= date_to)
     return q.order_by(Transaction.date.desc()).offset(skip).limit(limit).all()
+
+
+@router.get("/export/csv")
+def export_csv(
+    type: str | None = Query(None, pattern="^(ingreso|gasto)$"),
+    date_from: date | None = None,
+    date_to: date | None = None,
+    db: Session = Depends(get_db),
+):
+    q = db.query(Transaction)
+    if type:
+        q = q.filter(Transaction.type == type)
+    if date_from:
+        q = q.filter(Transaction.date >= date_from)
+    if date_to:
+        q = q.filter(Transaction.date <= date_to)
+
+    rows = q.order_by(Transaction.date.desc()).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Tipo", "Monto", "Categoría", "Descripción", "Fecha"])
+    for r in rows:
+        writer.writerow([r.id, r.type, r.amount, r.category, r.description, r.date])
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=finanzas.csv"},
+    )
 
 
 @router.get("/{tx_id}", response_model=TransactionOut)

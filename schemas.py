@@ -26,3 +26,27 @@ class MonthlySummary(BaseModel):
     total_ingresos: float
     total_gastos: float
     balance: float
+
+
+class CategoryOut(BaseModel):
+    category: str
+    total_gastos: float
+    total_ingresos: float
+    count: int
+
+
+class BudgetCreate(BaseModel):
+    category: str = Field(..., min_length=1, max_length=100)
+    amount: float = Field(..., gt=0)
+    month: str = Field(..., pattern=r"^\d{4}-\d{2}$")
+
+
+class BudgetOut(BaseModel):
+    id: int
+    category: str
+    amount: float
+    month: str
+    spent: float = 0
+    remaining: float = 0
+
+    model_config = {"from_attributes": True}

@@ -7,83 +7,153 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>💰 Finanzas Personales</h1>
-        <p class="subtitle">Controla tus ingresos y gastos</p>
-    </header>
+    <nav class="nav">
+        <div class="nav-inner">
+            <span class="nav-logo">◆ finanzas</span>
+            <div class="nav-links">
+                <button class="nav-link active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-link" data-tab="budgets">Presupuestos</button>
+                <button class="nav-link" data-tab="categories">Categorías</button>
+            </div>
+            <button class="btn-export" id="export-btn" title="Exportar CSV">↓ CSV</button>
+        </div>
+    </nav>
 
     <main>
-        <section id="dashboard">
-            <div class="card balance" id="balance-card">
-                <span class="card-label">Balance Total</span>
-                <span class="card-value" id="total-balance">$0</span>
-            </div>
-            <div class="card income">
-                <span class="card-label">Ingresos</span>
-                <span class="card-value" id="total-ingresos">$0</span>
-            </div>
-            <div class="card expense">
-                <span class="card-label">Gastos</span>
-                <span class="card-value" id="total-gastos">$0</span>
-            </div>
-        </section>
+        <!-- TAB: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content active">
 
-        <section id="form-section">
-            <h2>Nueva Transacción</h2>
-            <form id="transaction-form">
+            <div class="dashboard-grid" id="dashboard-cards">
+                <div class="stat-card balance" style="--accent:#818cf8">
+                    <span class="stat-label">Balance Total</span>
+                    <span class="stat-value" id="total-balance">$0</span>
+                </div>
+                <div class="stat-card income" style="--accent:#4ade80">
+                    <span class="stat-label">Ingresos este año</span>
+                    <span class="stat-value" id="total-ingresos">$0</span>
+                </div>
+                <div class="stat-card expense" style="--accent:#f87171">
+                    <span class="stat-label">Gastos este año</span>
+                    <span class="stat-value" id="total-gastos">$0</span>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Nueva transacción</h2>
+            </div>
+            <form id="transaction-form" class="tx-form">
                 <div class="form-row">
-                    <div class="form-group">
+                    <div class="field">
                         <label for="type">Tipo</label>
-                        <select id="type" required>
-                            <option value="ingreso">Ingreso</option>
-                            <option value="gasto">Gasto</option>
-                        </select>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-value="ingreso">Ingreso</button>
+                            <button type="button" class="toggle-btn" data-value="gasto">Gasto</button>
+                        </div>
+                        <input type="hidden" id="type" value="ingreso">
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="amount">Monto</label>
                         <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="category">Categoría</label>
-                        <input type="text" id="category" placeholder="ej: comida, salario" required>
+                        <input type="text" id="category" placeholder="ej: comida, salario" list="category-list" required>
+                        <datalist id="category-list"></datalist>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="date">Fecha</label>
                         <input type="date" id="date" required>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group" style="flex:2">
+                <div class="form-row form-row-bottom">
+                    <div class="field" style="flex:2">
                         <label for="description">Descripción</label>
                         <input type="text" id="description" placeholder="Opcional">
                     </div>
-                    <div class="form-group" style="display:flex;align-items:flex-end;gap:8px">
-                        <button type="submit" class="btn-primary">Agregar</button>
-                        <button type="button" class="btn-secondary" id="cancel-edit" style="display:none">Cancelar</button>
+                    <div class="field" style="flex:0">
+                        <button type="submit" class="btn-primary" id="submit-btn">Agregar</button>
+                        <button type="button" class="btn-ghost" id="cancel-edit" style="display:none">Cancelar</button>
                     </div>
                 </div>
             </form>
-        </section>
 
-        <section id="filters-section">
-            <h2>Transacciones</h2>
-            <div class="filters">
-                <select id="filter-type">
-                    <option value="">Todos</option>
-                    <option value="ingreso">Solo Ingresos</option>
-                    <option value="gasto">Solo Gastos</option>
-                </select>
-                <input type="text" id="filter-category" placeholder="Filtrar por categoría">
-                <input type="date" id="filter-from">
-                <span>a</span>
-                <input type="date" id="filter-to">
-                <button class="btn-secondary" id="apply-filters">Filtrar</button>
+            <div class="section-header">
+                <h2>Transacciones</h2>
+                <div class="filter-group">
+                    <select id="filter-type">
+                        <option value="">Todas</option>
+                        <option value="ingreso">Ingresos</option>
+                        <option value="gasto">Gastos</option>
+                    </select>
+                    <input type="text" id="filter-category" placeholder="Categoría">
+                    <input type="date" id="filter-from">
+                    <span class="filter-sep">—</span>
+                    <input type="date" id="filter-to">
+                    <button class="btn-ghost" id="apply-filters">Filtrar</button>
+                </div>
+            </div>
+
+            <div id="transactions-list" class="tx-list">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                </div>
             </div>
         </section>
 
-        <section id="list-section">
-            <div id="transactions-list">
-                <p class="empty">Cargando...</p>
+        <!-- TAB: BUDGETS -->
+        <section id="tab-budgets" class="tab-content">
+            <div class="section-header">
+                <h2>Presupuestos mensuales</h2>
+                <button class="btn-primary" id="add-budget-btn">+ Nuevo</button>
+            </div>
+
+            <form id="budget-form" class="budget-form" style="display:none">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="budget-category">Categoría</label>
+                        <input type="text" id="budget-category" placeholder="ej: comida" required>
+                    </div>
+                    <div class="field">
+                        <label for="budget-amount">Presupuesto</label>
+                        <input type="number" id="budget-amount" min="1" placeholder="0" required>
+                    </div>
+                    <div class="field">
+                        <label for="budget-month">Mes</label>
+                        <input type="month" id="budget-month" required>
+                    </div>
+                    <div class="field" style="flex:0">
+                        <button type="submit" class="btn-primary">Guardar</button>
+                        <button type="button" class="btn-ghost" id="cancel-budget">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="budgets-list" class="budgets-grid">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: CATEGORIES -->
+        <section id="tab-categories" class="tab-content">
+            <div class="section-header">
+                <h2>Resumen por categoría</h2>
+                <select id="cat-month-filter" class="cat-month-filter">
+                    <option value="">Todos los meses</option>
+                </select>
+            </div>
+
+            <div class="cat-layout">
+                <div id="categories-list" class="cat-list">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="spending-chart"></canvas>
+                    <p class="chart-empty" id="chart-empty">Agrega gastos para ver el gráfico</p>
+                </div>
             </div>
         </section>
     </main>
