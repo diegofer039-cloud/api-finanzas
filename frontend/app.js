@@ -37,6 +37,8 @@ function parseDate(d) { return d ? new Date(d + 'T00:00:00') : new Date(); }
 function switchTab(tab) {
     $$('.side-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     $$('.tab-content').forEach(el => el.classList.toggle('active', el.id === 'tab-' + tab));
+    if (tab === 'categories') safeRender(renderCategories);
+    if (tab === 'goals') safeRender(renderGoals);
 }
 $$('.side-btn[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
@@ -90,16 +92,19 @@ window.switchTab = switchTab;
 /* ============================================
    RENDER ALL
    ============================================ */
+function safeRender(fn) { try { fn(); } catch (e) { console.error(e); } }
+
 function renderAll() {
-    renderDashboard();
-    renderTxList();
-    renderBudgets();
-    renderCategories();
-    renderGoals();
-    renderGoalPreview();
-    renderChartYearOptions();
-    renderCatMonthOptions();
-    renderCategoryDatalist();
+    safeRender(renderChartYearOptions);
+    safeRender(renderCatMonthOptions);
+    safeRender(renderCategoryDatalist);
+    safeRender(renderDashboard);
+    safeRender(renderTxList);
+    safeRender(renderBudgets);
+    safeRender(renderCategories);
+    safeRender(renderGoals);
+    safeRender(renderGoalPreview);
+    safeRender(drawChart);
 }
 
 /* ============================================
@@ -116,6 +121,7 @@ function renderDashboard() {
     $('#total-gastos').textContent = fmt(gas);
     if (bal >= 0) $('#total-balance').style.color = 'var(--green)';
     else $('#total-balance').style.color = 'var(--red)';
+    drawChart();
 }
 
 /* ============================================
@@ -548,6 +554,7 @@ function drawPieChart(data) {
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
     const cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 20;
+    if (r <= 0) { empty.style.display = 'flex'; return; }
     const total = data.reduce((s, d) => s + d[1], 0);
     const colors = ['#818cf8', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#d946ef', '#f97316', '#14b8a6', '#8b5cf6', '#eab308'];
     let start = -Math.PI / 2;
@@ -563,10 +570,10 @@ function drawPieChart(data) {
     });
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.5, 0, Math.PI * 2);
-    ctx.fillStyle = 'var(--bg-primary)';
+    ctx.fillStyle = '#0a0a0f';
     ctx.fill();
-    ctx.fillStyle = 'var(--text-secondary)';
-    ctx.font = '13px Fira Sans, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '13px "Fira Sans", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(fmt(total), cx, cy);
@@ -625,7 +632,7 @@ function renderGoals() {
                     <div class="goal-name">${g.name}</div>
                     <div class="goal-meta">
                         <span>Meta: ${fmt(g.target_amount)}</span>
-                        <span>Ahorrado: ${fmt(g.current_amount)}</span>
+                        <span>Restante: ${fmt(g.target_amount - g.current_amount)}</span>
                         ${g.deadline ? '<span>Límite: ' + g.deadline + '</span>' : ''}
                     </div>
                     <div class="goal-pct" style="color:${pct >= 100 ? 'var(--green)' : 'var(--accent)'}">${pct.toFixed(1)}%</div>
@@ -693,8 +700,7 @@ $('#export-btn')?.addEventListener('click', () => {
    INIT
    ============================================ */
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadAll();
-    drawChart();
-    if (!$('#date').value) $('#date').valueAsDate = new Date();
+    $('#date').valueAsDate = new Date();
     if (!$('#budget-month').value) $('#budget-month').value = thisMonth();
+    await loadAll();
 });
