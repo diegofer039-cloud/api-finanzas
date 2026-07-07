@@ -30,7 +30,7 @@ def list_transactions(
     date_from: date | None = None,
     date_to: date | None = None,
     skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
+    limit: int = Query(100, ge=1, le=9999),
     db: Session = Depends(get_db),
 ):
     q = db.query(Transaction)

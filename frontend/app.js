@@ -73,7 +73,7 @@ async function api(method, path, body) {
    ============================================ */
 async function loadAll() {
     const [txs, budgets, goals, cats] = await Promise.all([
-        api('GET', '/transactions/?limit=9999'),
+        api('GET', '/transactions/?limit=500'),
         api('GET', '/budgets/'),
         api('GET', '/savings-goals/'),
         api('GET', '/categories/').catch(() => []),
