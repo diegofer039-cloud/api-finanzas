@@ -4,159 +4,224 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finanzas Personales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-inner">
-            <span class="nav-logo">◆ finanzas</span>
-            <div class="nav-links">
-                <button class="nav-link active" data-tab="dashboard">Dashboard</button>
-                <button class="nav-link" data-tab="budgets">Presupuestos</button>
-                <button class="nav-link" data-tab="categories">Categorías</button>
+    <div class="app-shell">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="sidebar-brand">◆ finanzas</div>
+                <nav class="sidebar-nav">
+                    <button class="side-btn active" data-tab="dashboard">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        Dashboard
+                    </button>
+                    <button class="side-btn" data-tab="budgets">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Presupuestos
+                    </button>
+                    <button class="side-btn" data-tab="categories">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Categorías
+                    </button>
+                    <button class="side-btn" data-tab="goals">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        Metas
+                    </button>
+                </nav>
             </div>
-            <button class="btn-export" id="export-btn" title="Exportar CSV">↓ CSV</button>
-        </div>
-    </nav>
-
-    <main>
-        <!-- TAB: DASHBOARD -->
-        <section id="tab-dashboard" class="tab-content active">
-
-            <div class="dashboard-grid" id="dashboard-cards">
-                <div class="stat-card balance" style="--accent:#818cf8">
-                    <span class="stat-label">Balance Total</span>
-                    <span class="stat-value" id="total-balance">$0</span>
-                </div>
-                <div class="stat-card income" style="--accent:#4ade80">
-                    <span class="stat-label">Ingresos este año</span>
-                    <span class="stat-value" id="total-ingresos">$0</span>
-                </div>
-                <div class="stat-card expense" style="--accent:#f87171">
-                    <span class="stat-label">Gastos este año</span>
-                    <span class="stat-value" id="total-gastos">$0</span>
-                </div>
+            <div class="sidebar-bottom">
+                <button class="side-btn export-btn" id="export-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Exportar CSV
+                </button>
             </div>
+        </aside>
 
-            <div class="section-header">
-                <h2>Nueva transacción</h2>
-            </div>
-            <form id="transaction-form" class="tx-form">
-                <div class="form-row">
-                    <div class="field">
-                        <label for="type">Tipo</label>
-                        <div class="toggle-group">
-                            <button type="button" class="toggle-btn active" data-value="ingreso">Ingreso</button>
-                            <button type="button" class="toggle-btn" data-value="gasto">Gasto</button>
+        <!-- MAIN -->
+        <main class="main-content">
+
+            <!-- TAB: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content active">
+                <div class="dashboard-grid" id="dashboard-cards">
+                    <div class="stat-card balance" style="--accent:#818cf8">
+                        <span class="stat-label">Balance total</span>
+                        <span class="stat-value" id="total-balance">$0</span>
+                    </div>
+                    <div class="stat-card income" style="--accent:#22c55e">
+                        <span class="stat-label">Ingresos del año</span>
+                        <span class="stat-value" id="total-ingresos">$0</span>
+                    </div>
+                    <div class="stat-card expense" style="--accent:#ef4444">
+                        <span class="stat-label">Gastos del año</span>
+                        <span class="stat-value" id="total-gastos">$0</span>
+                    </div>
+                </div>
+
+                <!-- CHART -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Evolución mensual</h3>
+                        <select id="chart-year" class="chart-year"></select>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="line-chart"></canvas>
+                        <div class="chart-empty" id="chart-empty">Sin datos suficientes</div>
+                    </div>
+                </div>
+
+                <!-- SAVINGS GOAL SNEAK -->
+                <div class="savings-preview" id="savings-preview">
+                    <div class="savings-preview-header">
+                        <h3>Meta de ahorro</h3>
+                        <button class="btn-ghost-sm" onclick="switchTab('goals')">Ver todas →</button>
+                    </div>
+                    <div class="savings-preview-body" id="savings-preview-body">
+                        <div class="loading-state"><div class="spinner"></div></div>
+                    </div>
+                </div>
+
+                <!-- TRANSACTIONS -->
+                <div class="section-bar">
+                    <h3>Transacciones</h3>
+                    <div class="filter-row">
+                        <select id="filter-type">
+                            <option value="">Todas</option>
+                            <option value="ingreso">Ingresos</option>
+                            <option value="gasto">Gastos</option>
+                        </select>
+                        <input type="text" id="filter-category" placeholder="Categoría">
+                        <input type="date" id="filter-from">
+                        <span class="sep">—</span>
+                        <input type="date" id="filter-to">
+                        <button class="btn-ghost-sm" id="apply-filters">Filtrar</button>
+                    </div>
+                </div>
+
+                <form id="transaction-form" class="tx-form">
+                    <div class="form-row">
+                        <div class="field w-auto">
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-value="ingreso">Ingreso</button>
+                                <button type="button" class="toggle-btn" data-value="gasto">Gasto</button>
+                            </div>
+                            <input type="hidden" id="type" value="ingreso">
                         </div>
-                        <input type="hidden" id="type" value="ingreso">
+                        <div class="field">
+                            <input type="number" id="amount" min="0.01" step="0.01" placeholder="Monto" required>
+                        </div>
+                        <div class="field">
+                            <input type="text" id="category" placeholder="Categoría" list="category-list" required>
+                            <datalist id="category-list"></datalist>
+                        </div>
+                        <div class="field">
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="field">
+                            <input type="text" id="description" placeholder="Descripción (opcional)">
+                        </div>
+                        <div class="field w-auto">
+                            <button type="submit" class="btn-primary" id="submit-btn">+</button>
+                            <button type="button" class="btn-ghost-sm" id="cancel-edit" style="display:none">Cancelar</button>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label for="amount">Monto</label>
-                        <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
-                    </div>
-                    <div class="field">
-                        <label for="category">Categoría</label>
-                        <input type="text" id="category" placeholder="ej: comida, salario" list="category-list" required>
-                        <datalist id="category-list"></datalist>
-                    </div>
-                    <div class="field">
-                        <label for="date">Fecha</label>
-                        <input type="date" id="date" required>
-                    </div>
-                </div>
-                <div class="form-row form-row-bottom">
-                    <div class="field" style="flex:2">
-                        <label for="description">Descripción</label>
-                        <input type="text" id="description" placeholder="Opcional">
-                    </div>
-                    <div class="field" style="flex:0">
-                        <button type="submit" class="btn-primary" id="submit-btn">Agregar</button>
-                        <button type="button" class="btn-ghost" id="cancel-edit" style="display:none">Cancelar</button>
-                    </div>
-                </div>
-            </form>
+                </form>
 
-            <div class="section-header">
-                <h2>Transacciones</h2>
-                <div class="filter-group">
-                    <select id="filter-type">
-                        <option value="">Todas</option>
-                        <option value="ingreso">Ingresos</option>
-                        <option value="gasto">Gastos</option>
+                <div id="transactions-list" class="tx-list">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </section>
+
+            <!-- TAB: BUDGETS -->
+            <section id="tab-budgets" class="tab-content">
+                <div class="section-bar">
+                    <h3>Presupuestos mensuales</h3>
+                    <button class="btn-primary" id="add-budget-btn">+ Nuevo</button>
+                </div>
+
+                <form id="budget-form" class="budget-form" style="display:none">
+                    <div class="form-row">
+                        <div class="field">
+                            <input type="text" id="budget-category" placeholder="Categoría" required>
+                        </div>
+                        <div class="field">
+                            <input type="number" id="budget-amount" min="1" placeholder="Presupuesto $" required>
+                        </div>
+                        <div class="field">
+                            <input type="month" id="budget-month" required>
+                        </div>
+                        <div class="field w-auto">
+                            <button type="submit" class="btn-primary">Guardar</button>
+                            <button type="button" class="btn-ghost-sm" id="cancel-budget">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="budgets-list" class="budgets-grid">
+                    <div class="loading-state"><div class="spinner"></div></div>
+                </div>
+            </section>
+
+            <!-- TAB: CATEGORIES -->
+            <section id="tab-categories" class="tab-content">
+                <div class="section-bar">
+                    <h3>Resumen por categoría</h3>
+                    <select id="cat-month-filter" class="filter-select">
+                        <option value="">Todos los meses</option>
                     </select>
-                    <input type="text" id="filter-category" placeholder="Categoría">
-                    <input type="date" id="filter-from">
-                    <span class="filter-sep">—</span>
-                    <input type="date" id="filter-to">
-                    <button class="btn-ghost" id="apply-filters">Filtrar</button>
                 </div>
-            </div>
-
-            <div id="transactions-list" class="tx-list">
-                <div class="loading-state">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB: BUDGETS -->
-        <section id="tab-budgets" class="tab-content">
-            <div class="section-header">
-                <h2>Presupuestos mensuales</h2>
-                <button class="btn-primary" id="add-budget-btn">+ Nuevo</button>
-            </div>
-
-            <form id="budget-form" class="budget-form" style="display:none">
-                <div class="form-row">
-                    <div class="field">
-                        <label for="budget-category">Categoría</label>
-                        <input type="text" id="budget-category" placeholder="ej: comida" required>
+                <div class="cat-layout">
+                    <div id="categories-list" class="cat-list">
+                        <div class="loading-state"><div class="spinner"></div></div>
                     </div>
-                    <div class="field">
-                        <label for="budget-amount">Presupuesto</label>
-                        <input type="number" id="budget-amount" min="1" placeholder="0" required>
-                    </div>
-                    <div class="field">
-                        <label for="budget-month">Mes</label>
-                        <input type="month" id="budget-month" required>
-                    </div>
-                    <div class="field" style="flex:0">
-                        <button type="submit" class="btn-primary">Guardar</button>
-                        <button type="button" class="btn-ghost" id="cancel-budget">Cancelar</button>
+                    <div class="chart-card">
+                        <div class="chart-wrap">
+                            <canvas id="pie-chart"></canvas>
+                            <div class="chart-empty" id="pie-empty">Agrega gastos para ver el gráfico</div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </section>
 
-            <div id="budgets-list" class="budgets-grid">
-                <div class="loading-state">
-                    <div class="spinner"></div>
+            <!-- TAB: GOALS -->
+            <section id="tab-goals" class="tab-content">
+                <div class="section-bar">
+                    <h3>Metas de ahorro</h3>
+                    <button class="btn-primary" id="add-goal-btn">+ Nueva meta</button>
                 </div>
-            </div>
-        </section>
 
-        <!-- TAB: CATEGORIES -->
-        <section id="tab-categories" class="tab-content">
-            <div class="section-header">
-                <h2>Resumen por categoría</h2>
-                <select id="cat-month-filter" class="cat-month-filter">
-                    <option value="">Todos los meses</option>
-                </select>
-            </div>
-
-            <div class="cat-layout">
-                <div id="categories-list" class="cat-list">
-                    <div class="loading-state">
-                        <div class="spinner"></div>
+                <form id="goal-form" class="goal-form" style="display:none">
+                    <div class="form-row">
+                        <div class="field">
+                            <input type="text" id="goal-name" placeholder="Nombre (ej: Viaje, Casa)" required>
+                        </div>
+                        <div class="field">
+                            <input type="number" id="goal-target" min="1" placeholder="Meta $" required>
+                        </div>
+                        <div class="field">
+                            <input type="number" id="goal-current" min="0" placeholder="Ahorrado $" value="0">
+                        </div>
+                        <div class="field">
+                            <input type="date" id="goal-deadline" placeholder="Fecha límite (opcional)">
+                        </div>
+                        <div class="field w-auto">
+                            <button type="submit" class="btn-primary">Guardar</button>
+                            <button type="button" class="btn-ghost-sm" id="cancel-goal">Cancelar</button>
+                        </div>
                     </div>
+                </form>
+
+                <div id="goals-list" class="goals-grid">
+                    <div class="loading-state"><div class="spinner"></div></div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="spending-chart"></canvas>
-                    <p class="chart-empty" id="chart-empty">Agrega gastos para ver el gráfico</p>
-                </div>
-            </div>
-        </section>
-    </main>
+            </section>
+
+        </main>
+    </div>
 
     <script src="app.js"></script>
 </body>

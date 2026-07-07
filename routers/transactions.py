@@ -68,10 +68,10 @@ def export_csv(
     for r in rows:
         writer.writerow([r.id, r.type, r.amount, r.category, r.description, r.date])
 
-    output.seek(0)
+    content = "\ufeff" + output.getvalue()
     return StreamingResponse(
-        iter([output.getvalue()]),
-        media_type="text/csv",
+        iter([content]),
+        media_type="text/csv; charset=utf-8-sig",
         headers={"Content-Disposition": "attachment; filename=finanzas.csv"},
     )
 

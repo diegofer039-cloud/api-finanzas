@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from database import Base, engine
-from routers import transactions, categories, budgets
+from routers import transactions, categories, budgets, goals
 
 Base.metadata.create_all(bind=engine)
 
@@ -26,6 +26,7 @@ app.add_middleware(
 app.include_router(transactions.router)
 app.include_router(categories.router)
 app.include_router(budgets.router)
+app.include_router(goals.router)
 
 frontend = Path(__file__).parent / "frontend"
 if frontend.exists():

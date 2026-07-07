@@ -50,3 +50,33 @@ class BudgetOut(BaseModel):
     remaining: float = 0
 
     model_config = {"from_attributes": True}
+
+
+class SavingsGoalCreate(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200)
+    target_amount: float = Field(..., gt=0)
+    current_amount: float = Field(0, ge=0)
+    deadline: date | None = None
+
+
+class SavingsGoalOut(BaseModel):
+    id: int
+    name: str
+    target_amount: float
+    current_amount: float
+    deadline: date | None
+    progress_pct: float = 0
+
+    model_config = {"from_attributes": True}
+
+
+class SavingsProjection(BaseModel):
+    goal_id: int
+    name: str
+    target_amount: float
+    current_amount: float
+    remaining: float
+    monthly_savings_rate: float
+    estimated_months: int | None
+    estimated_date: str | None
+    on_track: bool
