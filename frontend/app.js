@@ -2,7 +2,7 @@
    FINANZAS — App
    API URL (cambiar en producción)
    ============================================ */
-const API = 'http://127.0.0.1:8080';
+const API = '';
 
 /* ============================================
    DOM REFS
@@ -302,6 +302,7 @@ window.addEventListener('resize', () => {
    ============================================ */
 function resetTxForm() {
     $('#transaction-form').reset();
+    $('#date').valueAsDate = new Date();
     $('#type').value = 'ingreso';
     toggleBtns.forEach((b, i) => {
         b.classList.toggle('active', i === 0);
@@ -311,7 +312,6 @@ function resetTxForm() {
         $('#submit-btn').textContent = '+';
         $('#cancel-edit').style.display = 'none';
     }
-    $('#date').value = today();
 }
 
 $('#transaction-form').addEventListener('submit', async (e) => {
@@ -695,7 +695,6 @@ $('#export-btn')?.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', async () => {
     await loadAll();
     drawChart();
-    /* set default date */
-    if (!$('#date').value) $('#date').value = today();
+    if (!$('#date').value) $('#date').valueAsDate = new Date();
     if (!$('#budget-month').value) $('#budget-month').value = thisMonth();
 });

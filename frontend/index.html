@@ -105,6 +105,7 @@
                 <form id="transaction-form" class="tx-form">
                     <div class="form-row">
                         <div class="field w-auto">
+                            <label>Tipo</label>
                             <div class="toggle-group">
                                 <button type="button" class="toggle-btn active" data-value="ingreso">Ingreso</button>
                                 <button type="button" class="toggle-btn" data-value="gasto">Gasto</button>
@@ -112,19 +113,23 @@
                             <input type="hidden" id="type" value="ingreso">
                         </div>
                         <div class="field">
-                            <input type="number" id="amount" min="0.01" step="0.01" placeholder="Monto" required>
+                            <label for="amount">Monto</label>
+                            <input type="number" id="amount" min="0.01" step="0.01" placeholder="0.00" required>
                         </div>
                         <div class="field">
-                            <input type="text" id="category" placeholder="Categoría" list="category-list" required>
+                            <label for="category">Categoría</label>
+                            <input type="text" id="category" placeholder="ej: Comida" list="category-list" required>
                             <datalist id="category-list"></datalist>
                         </div>
                         <div class="field">
+                            <label for="date">Fecha</label>
                             <input type="date" id="date" required>
                         </div>
                         <div class="field">
-                            <input type="text" id="description" placeholder="Descripción (opcional)">
+                            <label for="description">Descripción</label>
+                            <input type="text" id="description" placeholder="Opcional">
                         </div>
-                        <div class="field w-auto">
+                        <div class="field w-auto" style="justify-content:flex-end">
                             <button type="submit" class="btn-primary" id="submit-btn">+</button>
                             <button type="button" class="btn-ghost-sm" id="cancel-edit" style="display:none">Cancelar</button>
                         </div>

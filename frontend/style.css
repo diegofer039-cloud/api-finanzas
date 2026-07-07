@@ -177,12 +177,8 @@ input, select, textarea {
     font-family: var(--font-sans);
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-input[type="month"],
-input[type="datetime-local"],
-select {
+.field input,
+.field select {
     background: var(--bg-card);
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
@@ -193,8 +189,18 @@ select {
     width: 100%;
     transition: border var(--transition);
 }
-input:focus, select:focus { border-color: var(--accent); }
-input::placeholder { color: var(--text-tertiary); }
+.field input:focus,
+.field select:focus { border-color: var(--accent); }
+.field input::placeholder { color: var(--text-tertiary); }
+
+input[type="date"],
+input[type="month"] {
+    min-width: 140px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+}
 
 /* ============================================
    STAT CARDS (dashboard)
@@ -342,8 +348,20 @@ input::placeholder { color: var(--text-tertiary); }
     gap: 10px;
     flex-wrap: wrap;
 }
-.field { flex: 1; min-width: 110px; }
+.field {
+    flex: 1;
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
 .field.w-auto { flex: 0 0 auto; min-width: 0; }
+.field label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
 .toggle-group {
     display: flex;
