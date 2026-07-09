@@ -102,6 +102,14 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+    .toast,
+    .confirm-modal-content {
+        animation: none !important;
+    }
+    .toast {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 /* ---------- SCROLLBAR ---------- */
@@ -142,18 +150,6 @@ body {
     padding: 0;
     z-index: 10;
     position: relative;
-}
-
-.sidebar::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, var(--accent-subtle) 30%, var(--accent-subtle) 70%, transparent);
-    opacity: 0.5;
-    pointer-events: none;
 }
 
 .sidebar-brand {
@@ -222,10 +218,15 @@ body {
     font-weight: 500;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    transition: all var(--transition);
+    transition: background var(--transition), color var(--transition);
     width: 100%;
     text-align: left;
     position: relative;
+}
+
+.side-btn:active {
+    transform: scale(0.97);
+    transition: transform 120ms ease-out;
 }
 
 .side-btn svg {
@@ -263,10 +264,6 @@ body {
     background: linear-gradient(180deg, var(--accent), #059669);
     border-radius: 0 3px 3px 0;
     box-shadow: 0 0 8px var(--accent-glow);
-}
-
-.side-btn:active {
-    transform: scale(0.97);
 }
 
 .sidebar-bottom {
@@ -312,6 +309,17 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-4px);
     }
 }
 
@@ -437,6 +445,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     padding: 18px 20px;
+    animation: fade-in 0.35s cubic-bezier(0.23,1,0.32,1) both;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -444,6 +453,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     position: relative;
     overflow: hidden;
 }
+
+.stat-card:nth-child(2) { animation-delay: 0.08s; }
+.stat-card:nth-child(3) { animation-delay: 0.16s; }
+.stat-card:nth-child(4) { animation-delay: 0.24s; }
 
 .stat-card::before {
     content: '';
@@ -597,7 +610,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .chart-wrap {
     position: relative;
     width: 100%;
-    height: 240px;
+    height: 300px;
 }
 
 .chart-wrap canvas {
@@ -696,13 +709,59 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* ============================================
    TRANSACTION FORM
    ============================================ */
+.tx-form-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    background: var(--surface-card);
+    border: 1px dashed var(--border-subtle);
+    border-radius: var(--radius-lg);
+    color: var(--ink-tertiary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.tx-form-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-subtle);
+}
+
+.tx-form-toggle svg {
+    flex-shrink: 0;
+}
+
 .tx-form {
     background: var(--surface-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     padding: 18px 20px;
     margin-bottom: 14px;
-    transition: border-color var(--transition);
+    transition: border-color var(--transition), opacity 200ms ease, transform 200ms ease, max-height 300ms ease;
+    overflow: hidden;
+}
+
+.tx-form.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+    border-color: transparent;
+    pointer-events: none;
+}
+
+.tx-form.open {
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .tx-form:hover {
@@ -754,6 +813,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .toggle-btn:active {
     transform: scale(0.97);
+    transition: transform 120ms ease-out;
 }
 
 .btn-primary {
@@ -766,7 +826,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding: 9px 22px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition);
     white-space: nowrap;
     box-shadow: 0 2px 10px var(--accent-glow);
     position: relative;
@@ -789,6 +849,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .btn-primary:active {
     transform: scale(0.97) translateY(0);
     box-shadow: 0 2px 8px var(--accent-glow);
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
 }
 
 .btn-ghost-sm {
@@ -801,7 +862,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding: 6px 12px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: all var(--transition);
+    transition: border-color var(--transition), color var(--transition), background var(--transition);
     white-space: nowrap;
 }
 
@@ -813,6 +874,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .btn-ghost-sm:active {
     transform: scale(0.97);
+    transition: transform 120ms ease-out;
 }
 
 /* ============================================
@@ -832,8 +894,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     background: var(--surface-card);
     border-radius: var(--radius-sm);
     border: 1px solid transparent;
-    transition: all var(--transition);
-    animation: tx-in 0.35s var(--ease-out) forwards;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+    animation: tx-in 0.3s var(--ease-out) forwards;
     opacity: 0;
     transform: translateY(8px);
 }
@@ -905,21 +967,49 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     text-overflow: ellipsis;
 }
 
+.tx-edit {
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--ink-secondary);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 3px 10px;
+    border-radius: var(--radius-xs);
+    transition: color var(--transition), background var(--transition), border-color var(--transition);
+    line-height: 1.4;
+}
+
+.tx-edit:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+}
+
 .tx-delete {
     background: transparent;
-    border: none;
+    border: 1px solid var(--border-subtle);
     color: var(--ink-tertiary);
-    font-size: 15px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
     cursor: pointer;
-    padding: 2px 6px;
+    padding: 3px 10px;
     border-radius: var(--radius-xs);
-    transition: all var(--transition);
-    line-height: 1;
+    transition: color var(--transition), background var(--transition), border-color var(--transition);
+    line-height: 1.4;
 }
 
 .tx-delete:hover {
     color: var(--red);
+    border-color: var(--red);
     background: var(--red-subtle);
+}
+
+.tx-delete:active {
+    transform: scale(0.92);
+    transition: transform 120ms ease-out;
 }
 
 /* ============================================
@@ -1454,5 +1544,288 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
     .stat-card.balance .stat-value {
         font-size: 22px;
+    }
+}
+
+/* ============================================
+   TOAST SYSTEM
+   ============================================ */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+    max-width: 360px;
+    width: 100%;
+}
+
+.toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: toast-in 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.4;
+}
+
+.toast.removing {
+    animation: toast-out 0.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.toast-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.toast-icon.success {
+    background: var(--green-subtle);
+    color: var(--green);
+}
+
+.toast-icon.error {
+    background: var(--red-subtle);
+    color: var(--red);
+}
+
+.toast-icon.info {
+    background: var(--accent-subtle);
+    color: var(--accent);
+}
+
+.toast-msg {
+    flex: 1;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(100%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toast-out {
+    to {
+        opacity: 0;
+        transform: translateX(100%) scale(0.95);
+    }
+}
+
+/* ============================================
+   CONFIRM MODAL
+   ============================================ */
+.confirm-modal {
+    background: transparent;
+    border: none;
+    padding: 0;
+    max-width: 380px;
+    width: 100%;
+    border-radius: var(--radius-lg);
+}
+
+.confirm-modal::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    animation: fade-in 0.2s ease-out;
+}
+
+.confirm-modal-content {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    animation: modal-in 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.confirm-message {
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-danger {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 22px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    box-shadow: 0 2px 10px var(--red-subtle);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239,68,68,0.3);
+}
+
+.btn-danger:active {
+    transform: scale(0.97) translateY(0);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    gap: 12px;
+}
+
+.empty-state-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--surface-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-tertiary);
+    margin-bottom: 4px;
+}
+
+.empty-state-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-secondary);
+}
+
+.empty-state-desc {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+.empty-state .btn-primary {
+    margin-top: 8px;
+}
+
+.empty-state {
+    animation: fade-in 0.35s cubic-bezier(0.23,1,0.32,1);
+}
+
+/* ============================================
+   SKELETON SHIMMER
+   ============================================ */
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--surface-card) 25%, var(--surface-hover) 50%, var(--surface-card) 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+.skeleton-row {
+    height: 48px;
+    margin-bottom: 4px;
+    border-radius: var(--radius-md);
+}
+
+.skeleton-card {
+    height: 100px;
+    border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   EDIT MODE HIGHLIGHT
+   ============================================ */
+.tx-row.editing {
+    border-color: var(--accent);
+    background: var(--accent-subtle);
+    box-shadow: 0 0 0 1px var(--accent-glow);
+}
+
+/* ============================================
+   SEARCH FIELD (extends filter-row)
+   ============================================ */
+#filter-search {
+    min-width: 140px;
+}
+
+/* ============================================
+   FORM FIELD ERROR
+   ============================================ */
+.field-error {
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 3px;
+    animation: fade-in 0.2s ease-out;
+}
+
+.field input.error,
+.field select.error {
+    border-color: var(--red);
+    background: var(--red-subtle);
+}
+
+.field input.error:focus,
+.field select.error:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 2px var(--red-subtle);
+}
+
+@media (max-width: 480px) {
+    .toast-container {
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        bottom: 10px;
+    }
+
+    .confirm-modal {
+        margin: 0 16px;
     }
 }

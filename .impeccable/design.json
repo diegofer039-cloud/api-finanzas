@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-08T18:21:00-05:00",
+  "title": "Design System: Finanzas Personales",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Verde Terminal",
+        "canonical": "oklch(0.64 0.20 150)",
+        "tonalRamp": ["#0b2e15", "#124a20", "#19662b", "#208236", "#22c55e", "#4dd17a", "#8cdea5", "#c5edd3"]
+      },
+      "green": {
+        "role": "semantic",
+        "displayName": "Green",
+        "canonical": "oklch(0.62 0.18 160)",
+        "tonalRamp": ["#082214", "#0d391f", "#10502b", "#136736", "#10b981", "#4ccb98", "#86dbb7", "#c0edd7"]
+      },
+      "red": {
+        "role": "semantic",
+        "displayName": "Red",
+        "canonical": "oklch(0.55 0.22 30)",
+        "tonalRamp": ["#2e0a0a", "#4f1010", "#6f1a1a", "#8f2323", "#ef4444", "#f26969", "#f59a9a", "#f9cccc"]
+      },
+      "amber": {
+        "role": "semantic",
+        "displayName": "Amber",
+        "canonical": "oklch(0.72 0.18 80)",
+        "tonalRamp": ["#2e1f06", "#4f3509", "#6f4b0c", "#8f620f", "#f59e0b", "#f7b33c", "#faca7a", "#fce2bb"]
+      },
+      "cyan": {
+        "role": "semantic",
+        "displayName": "Cyan",
+        "canonical": "oklch(0.68 0.15 210)",
+        "tonalRamp": ["#03242e", "#053d4f", "#065570", "#086e91", "#06b6d4", "#38c5dd", "#74d6e8", "#b3e7f3"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.94 0.005 250)",
+        "tonalRamp": ["#1a1c21", "#373b44", "#545a67", "#71798a", "#8e98ad", "#aab2c3", "#c7cdd8", "#e4e7ec"]
+      },
+      "surface-base": {
+        "role": "neutral",
+        "displayName": "Surface Base",
+        "canonical": "oklch(0.02 0.005 260)",
+        "tonalRamp": ["#010204", "#020408", "#03060c", "#040810", "#050a14", "#070c18", "#080e1c", "#091020"]
+      },
+      "surface-card": {
+        "role": "neutral",
+        "displayName": "Surface Card",
+        "canonical": "oklch(0.09 0.015 260)",
+        "tonalRamp": ["#070a12", "#0c111f", "#11172b", "#161e38", "#1b2545", "#202b51", "#25325e", "#2a386b"]
+      }
+    },
+    "typographyMeta": {
+      "body": { "displayName": "Body", "purpose": "Textos generales, botones, labels de formulario." },
+      "label": { "displayName": "Label", "purpose": "Labels de field, stat-label, headers de sidebar." },
+      "mono": { "displayName": "Mono/Number", "purpose": "Todos los valores financieros y porcentuales." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Easing estándar para transiciones de estado." },
+      { "name": "ease-spring", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "purpose": "Easing con rebote suave para animaciones de entrada." },
+      { "name": "duration-state", "value": "0.2s", "purpose": "Transiciones de estado (hover, focus, active)." },
+      { "name": "duration-enter", "value": "0.3s", "purpose": "Animaciones de entrada (tx-in, toast-in, modal-in)." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "btn-primary",
+      "description": "Botón de acción principal. Usar una vez por sección.",
+      "html": "<button class=\"ds-btn-primary\">+ Nueva Transacción</button>",
+      "css": ".ds-btn-primary { background: linear-gradient(135deg, #22c55e, #059669); color: #fff; border: none; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 6px; cursor: pointer; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; box-shadow: 0 2px 10px rgba(34, 197, 94, 0.25); position: relative; overflow: hidden; } .ds-btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); pointer-events: none; } .ds-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.25); } .ds-btn-primary:active { transform: scale(0.97) translateY(0); transition-duration: 120ms; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "btn-ghost",
+      "description": "Botón secundario sutil. Para acciones complementarias.",
+      "html": "<button class=\"ds-btn-ghost\">Cancelar</button>",
+      "css": ".ds-btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.06); color: #94a3b8; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; } .ds-btn-ghost:hover { border-color: rgba(255,255,255,0.1); color: #f0f2f5; background: #1a1f30; } .ds-btn-ghost:active { transform: scale(0.97); transition-duration: 120ms; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "btn-danger",
+      "description": "Botón de acción destructiva. Confirmar antes de usar.",
+      "html": "<button class=\"ds-btn-danger\">Eliminar</button>",
+      "css": ".ds-btn-danger { background: #ef4444; color: #fff; border: none; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 6px; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; box-shadow: 0 2px 10px rgba(239, 68, 68, 0.08); } .ds-btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3); } .ds-btn-danger:active { transform: scale(0.97) translateY(0); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de texto estándar.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Categoría\">",
+      "css": ".ds-input { background: #111522; border: 1px solid rgba(255,255,255,0.06); color: #f0f2f5; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 13px; padding: 9px 12px; border-radius: 6px; outline: none; width: 100%; transition: border 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #64748b; } .ds-input:focus { border-color: #22c55e; background: #1a1f30; }"
+    },
+    {
+      "name": "Toggle Group",
+      "kind": "input",
+      "refersTo": "toggle-group",
+      "description": "Segmented control para selección binaria o ternaria.",
+      "html": "<div class=\"ds-toggle-group\"><button class=\"ds-toggle active\">Ingreso</button><button class=\"ds-toggle\">Gasto</button></div>",
+      "css": ".ds-toggle-group { display: flex; background: #0a0d16; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); overflow: hidden; } .ds-toggle { flex: 1; padding: 9px 16px; border: none; background: transparent; color: #94a3b8; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-toggle.active { background: #22c55e; color: #fff; } .ds-toggle:active { transform: scale(0.97); transition-duration: 120ms; }"
+    },
+    {
+      "name": "Stat Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Card de métrica financiera para el dashboard.",
+      "html": "<div class=\"ds-stat-card\"><span class=\"ds-stat-label\">BALANCE TOTAL</span><span class=\"ds-stat-value\">$9.865.000</span></div>",
+      "css": ".ds-stat-card { background: #111522; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; } .ds-stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #22c55e, transparent); opacity: 0.6; pointer-events: none; } .ds-stat-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); } .ds-stat-label { font-size: 11px; font-weight: 500; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase; } .ds-stat-value { font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 20px; font-weight: 600; color: #f0f2f5; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Transaction Row",
+      "kind": "custom",
+      "refersTo": "tx-row",
+      "description": "Fila individual de transacción en la lista.",
+      "html": "<div class=\"ds-tx-row\"><span class=\"ds-tx-dot ingreso\"></span><span class=\"ds-tx-amount pos\">+$250.000</span><span class=\"ds-tx-category\">Freelance</span><span class=\"ds-tx-date\">2026-07-06</span><span class=\"ds-tx-desc\">Trabajo web</span><button class=\"ds-tx-edit\">✎</button><button class=\"ds-tx-delete\">✕</button></div>",
+      "css": ".ds-tx-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: #111522; border-radius: 6px; border: 1px solid transparent; transition: border-color 0.2s, background 0.2s; } .ds-tx-row:hover { border-color: rgba(255,255,255,0.06); background: #1a1f30; } .ds-tx-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; } .ds-tx-dot.ingreso { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.25); } .ds-tx-dot.gasto { background: #ef4444; } .ds-tx-amount { font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 600; min-width: 85px; font-variant-numeric: tabular-nums; } .ds-tx-amount.pos { color: #10b981; } .ds-tx-amount.neg { color: #ef4444; } .ds-tx-category { font-size: 12.5px; color: #94a3b8; min-width: 80px; font-weight: 500; } .ds-tx-date { font-size: 11.5px; color: #64748b; min-width: 80px; font-variant-numeric: tabular-nums; } .ds-tx-desc { flex: 1; font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ds-tx-edit { background: transparent; border: none; color: #64748b; font-size: 15px; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: color 0.2s, background 0.2s; line-height: 1; } .ds-tx-edit:hover { color: #22c55e; background: rgba(34, 197, 94, 0.08); } .ds-tx-delete { background: transparent; border: none; color: #64748b; font-size: 15px; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: color 0.2s, background 0.2s; line-height: 1; } .ds-tx-delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.08); }"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "side-btn",
+      "description": "Navegación lateral principal con indicador de active.",
+      "html": "<nav class=\"ds-sidebar\"><button class=\"ds-side-btn active\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/></svg>Dashboard</button><button class=\"ds-side-btn\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\"/></svg>Presupuestos</button></nav>",
+      "css": ".ds-sidebar { display: flex; flex-direction: column; gap: 2px; } .ds-side-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: none; background: transparent; color: #94a3b8; font-family: 'Fira Sans', system-ui, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 6px; transition: background 0.2s, color 0.2s; width: 100%; text-align: left; position: relative; } .ds-side-btn:hover { background: rgba(255,255,255,0.03); color: #f0f2f5; } .ds-side-btn svg { flex-shrink: 0; opacity: 0.7; transition: opacity 0.2s; } .ds-side-btn:hover svg { opacity: 1; } .ds-side-btn.active { background: rgba(34, 197, 94, 0.08); color: #22c55e; } .ds-side-btn.active svg { opacity: 1; } .ds-side-btn.active::before { content: ''; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); width: 3px; height: 20px; background: linear-gradient(180deg, #22c55e, #059669); border-radius: 0 3px 3px 0; box-shadow: 0 0 8px rgba(34, 197, 94, 0.25); }"
+    },
+    {
+      "name": "Goal Card",
+      "kind": "card",
+      "refersTo": "goal-card",
+      "description": "Card de meta de ahorro con barra de progreso.",
+      "html": "<div class=\"ds-goal-card\"><div class=\"ds-goal-name\">PC GAMER</div><div class=\"ds-goal-meta\"><span>$3.000 de $8.000</span></div><div class=\"ds-goal-pct\">37.5%</div><div class=\"ds-goal-bar\"><div class=\"ds-goal-fill\" style=\"width:37.5%\"></div></div></div>",
+      "css": ".ds-goal-card { background: #111522; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; transition: all 0.2s; position: relative; overflow: hidden; } .ds-goal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #22c55e, #06b6d4, transparent); opacity: 0.5; pointer-events: none; } .ds-goal-card:hover { border-color: rgba(255,255,255,0.1); } .ds-goal-name { font-size: 15px; font-weight: 600; color: #f0f2f5; margin-bottom: 4px; } .ds-goal-meta { font-size: 12px; color: #94a3b8; margin-bottom: 12px; line-height: 1.6; } .ds-goal-pct { font-family: 'Fira Code', monospace; font-size: 20px; font-weight: 700; margin-bottom: 8px; font-variant-numeric: tabular-nums; } .ds-goal-bar { height: 6px; background: #0a0d16; border-radius: 3px; overflow: hidden; margin-bottom: 10px; } .ds-goal-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #10b981); border-radius: 3px; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }"
+    },
+    {
+      "name": "Toast Notification",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Notificación temporal que aparece desde la derecha.",
+      "html": "<div class=\"ds-toast\"><span class=\"ds-toast-icon success\">✓</span><span class=\"ds-toast-msg\">Transacción creada correctamente</span></div>",
+      "css": ".ds-toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 10px; background: #111522; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 8px 32px rgba(0,0,0,0.5); font-size: 13px; color: #f0f2f5; line-height: 1.4; } .ds-toast-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 11px; font-weight: 700; } .ds-toast-icon.success { background: rgba(16, 185, 129, 0.08); color: #10b981; } .ds-toast-icon.error { background: rgba(239, 68, 68, 0.08); color: #ef4444; } .ds-toast-icon.info { background: rgba(34, 197, 94, 0.08); color: #22c55e; } .ds-toast-msg { flex: 1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Panel de Control",
+    "overview": "Un panel de control financiero que funciona como la cabina de un avión: cada instrumento muestra una métrica precisa, cada control responde con feedback inmediato, y el diseño desaparece para dejar solo los datos. No hay concesiones decorativas; cada píxel tiene un trabajo.\n\nLa paleta es oscura de principio a fin — no por estética, sino porque el contenido financiero (números, tablas, gráficos) necesita el máximo contraste posible contra el fondo. Las superficies se distinguen por sutiles cambios de luminosidad, no por sombras. El acento verde (#22c55e) se usa con moderación: solo para el balance positivo, el botón primario, y el estado activo de navegación. Su rareza es lo que le da peso.\n\nEste sistema rechaza explícitamente: gradientes decorativos, glassmorphism, side-stripe borders, tipografía superpuesta sobre imágenes, y cualquier patrón de SaaS genérico que añada ruido visual sin aportar información.",
+    "keyCharacteristics": [
+      "Oscuro profundo, no gris oscuro: el fondo base es #02040a (near-black)",
+      "Una sola fuente sans (Fira Sans) más una mono (Fira Code) para números",
+      "Sin sombras: la profundidad se construye con capas de color",
+      "Animaciones precisas y breves (≤300ms), con curvas exponenciales suaves",
+      "Los números usan tabular-nums para que no bailen al cambiar"
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "El acento verde es el único color de llamada a la acción. Cualquier otro color que necesite atención usa rojo (error/peligro) o ámbar (advertencia). Cyan es solo decorativo en gradients de goal-card.", "section": "colors" },
+      { "name": "The Mono Rule", "body": "Todo valor monetario o porcentual usa Fira Code con font-variant-numeric: tabular-nums. Si no es un número, no va en mono.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Las superficies son planas en reposo. Sin sombras, sin gradientes de elevación. El hover state levanta el elemento con un cambio de color de fondo, no con una sombra.", "section": "elevation" }
+    ],
+    "dos": [
+      "Usar el acento verde escasamente (≤10% de la pantalla). Su rareza es su poder.",
+      "Usar Fira Code + tabular-nums para todo valor monetario o porcentual.",
+      "Usar las 5 capas de superficie para crear jerarquía visual.",
+      "Mantener botones pequeños y compactos (padding 9px 22px, font 13px).",
+      "Animar con cubic-bezier(0.16, 1, 0.3, 1) o 0.2s para transiciones de estado.",
+      "Respetar prefers-reduced-motion: animaciones deben tener fallback a crossfade o instant."
+    ],
+    "donts": [
+      "Usar sombras para crear profundidad. Usa capas de color.",
+      "Usar side-stripe borders (border-left/right > 1px como acento). Usa la barra ::before o nada.",
+      "Usar gradient text (background-clip: text). Un solo color sólido.",
+      "Usar glassmorphism (backdrop-filter: blur decorativo).",
+      "Usar el template hero-metric (número grande + label pequeño + gradiente). Los stat cards son planos.",
+      "Usar cards idénticas con icono + heading + texto repetido.",
+      "Usar tiny uppercase tracked eyebrow sobre cada sección.",
+      "Usar el verde (#22c55e) para nada que no sea positivo/financiero.",
+      "Mezclar Fira Sans con otra sans-serif similar.",
+      "Usar placeholders claros (light gray) sobre fondo oscuro. Placeholder debe ser #64748b mínimo."
+    ]
+  }
+}

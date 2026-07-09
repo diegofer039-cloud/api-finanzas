@@ -1,7 +1,5 @@
+*.db
 __pycache__/
 *.pyc
-*.pyo
-*.db
+screenshot*.png
 .env
-.venv/
-venv/
