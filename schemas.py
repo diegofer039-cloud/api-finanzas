@@ -70,6 +70,10 @@ class SavingsGoalOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ContributeGoal(BaseModel):
+    amount: float = Field(..., gt=0)
+
+
 class SavingsProjection(BaseModel):
     goal_id: int
     name: str

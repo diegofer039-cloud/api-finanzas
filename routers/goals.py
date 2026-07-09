@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import SavingsGoal, Transaction
-from schemas import SavingsGoalCreate, SavingsGoalOut, SavingsProjection
+from schemas import ContributeGoal, SavingsGoalCreate, SavingsGoalOut, SavingsProjection
 
 router = APIRouter(prefix="/savings-goals", tags=["savings-goals"])
 
@@ -56,6 +56,17 @@ def update_goal(goal_id: int, data: SavingsGoalCreate, db: Session = Depends(get
     goal.target_amount = data.target_amount
     goal.current_amount = data.current_amount
     goal.deadline = data.deadline
+    db.commit()
+    db.refresh(goal)
+    return _to_out(goal)
+
+
+@router.patch("/{goal_id}/contribute", response_model=SavingsGoalOut)
+def contribute_to_goal(goal_id: int, data: ContributeGoal, db: Session = Depends(get_db)):
+    goal = db.get(SavingsGoal, goal_id)
+    if not goal:
+        raise HTTPException(404, "Meta no encontrada")
+    goal.current_amount += data.amount
     db.commit()
     db.refresh(goal)
     return _to_out(goal)

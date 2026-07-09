@@ -19,6 +19,7 @@ let state = {
     goals: [],
     categories: [],
     editingTxId: null,
+    editingGoalId: null,
     viewMode: 'year',
 };
 
@@ -31,6 +32,10 @@ function fmt(n) {
 function today() { return new Date().toISOString().slice(0, 10); }
 function thisMonth() { return new Date().toISOString().slice(0, 7); }
 function parseDate(d) { return d ? new Date(d + 'T00:00:00') : new Date(); }
+function fmtDate(d) {
+    const date = parseDate(d);
+    return date.toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
@@ -66,6 +71,22 @@ function showToast(message, type) {
         el.classList.add('removing');
         el.addEventListener('animationend', () => el.remove());
     }, 3500);
+}
+
+let offlineBannerVisible = false;
+function showOfflineBanner() {
+    if (offlineBannerVisible) return;
+    offlineBannerVisible = true;
+    const b = document.createElement('div');
+    b.id = 'offline-banner';
+    b.textContent = 'Sin conexión al servidor — reintentando...';
+    document.body.prepend(b);
+}
+function hideOfflineBanner() {
+    if (!offlineBannerVisible) return;
+    offlineBannerVisible = false;
+    const b = document.getElementById('offline-banner');
+    if (b) { b.style.opacity = '0'; setTimeout(() => b.remove(), 300); }
 }
 
 /* ============================================
@@ -645,6 +666,7 @@ function toggleTxForm(open) {
         form.classList.remove('open');
         form.classList.add('collapsed');
         toggle.style.display = '';
+        if (document.activeElement && document.activeElement.closest('#transaction-form')) document.activeElement.blur();
     }
 }
 
@@ -739,7 +761,7 @@ function renderTxList() {
             <span class="tx-type ${t.type}"></span>
             <span class="tx-amount ${t.type === 'ingreso' ? 'pos' : 'neg'}">${t.type === 'ingreso' ? '+' : '-'}${fmt(t.amount)}</span>
             <span class="tx-category">${t.category}</span>
-            <span class="tx-date">${t.date}</span>
+            <span class="tx-date">${fmtDate(t.date)}</span>
             <span class="tx-desc">${t.description || ''}</span>
             <button class="tx-edit" data-id="${t.id}">Editar</button>
             <button class="tx-delete" data-id="${t.id}">Eliminar</button>
@@ -813,7 +835,7 @@ function renderBudgets() {
                 <h4>${b.category}</h4>
                 <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${over ? 'var(--red)' : pct > 80 ? '#f59e0b' : 'var(--accent)'}"></div></div>
                 <div class="budget-meta"><span>${fmt(sp)}</span><span>${fmt(b.amount)}</span></div>
-                <div class="budget-month">${b.month}</div>
+                <div class="budget-month">${fmtDate(b.month + '-01')}</div>
                 <div class="budget-actions">
                     <button data-id="${b.id}" class="edit-budget">Editar</button>
                     <button data-id="${b.id}" class="danger del-budget">Eliminar</button>
@@ -1194,17 +1216,70 @@ function renderGoals() {
                     <div class="goal-meta">
                         <span>Meta: ${fmt(g.target_amount)}</span>
                         <span>Restante: ${fmt(g.target_amount - g.current_amount)}</span>
-                        ${g.deadline ? '<span>Límite: ' + g.deadline + '</span>' : ''}
+                        ${g.deadline ? '<span>Límite: ' + fmtDate(g.deadline) + '</span>' : ''}
                     </div>
                     <div class="goal-pct" style="color:${pct >= 100 ? 'var(--green)' : 'var(--accent)'}">${pct.toFixed(1)}%</div>
                     <div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
                     ${projHtml}
                     <div class="goal-actions">
+                        <button data-id="${g.id}" class="edit-goal">Editar</button>
+                        <button data-id="${g.id}" class="contribute-goal">+ Aportar</button>
                         <button data-id="${g.id}" class="danger del-goal">Eliminar</button>
                     </div>
                 </div>
             `;
         }).join('');
+
+        el.querySelectorAll('.edit-goal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const g = state.goals.find(go => go.id === +btn.dataset.id);
+                if (!g) return;
+                state.editingGoalId = g.id;
+                const f = $('#goal-form');
+                f.style.display = 'block';
+                $('#goal-name').value = g.name;
+                $('#goal-target').value = g.target_amount;
+                $('#goal-current').value = g.current_amount;
+                $('#goal-deadline').value = g.deadline || '';
+                $('#submit-goal-btn').textContent = 'Guardar cambios';
+                $('#cancel-goal').style.display = '';
+            });
+        });
+
+        el.querySelectorAll('.contribute-goal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.goal-card');
+                const existing = card.querySelector('.contribute-inline');
+                if (existing) { existing.remove(); return; }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'contribute-inline';
+                wrapper.innerHTML = `
+                    <input type="number" class="contribute-input" min="1" placeholder="Monto a aportar" aria-label="Monto a aportar">
+                    <button class="btn-primary-sm confirm-contribute">Aportar</button>
+                    <button class="btn-ghost-sm cancel-contribute">X</button>
+                `;
+                btn.insertAdjacentElement('afterend', wrapper);
+                const input = wrapper.querySelector('.contribute-input');
+                input.focus();
+
+                wrapper.querySelector('.cancel-contribute').addEventListener('click', () => wrapper.remove());
+                wrapper.querySelector('.confirm-contribute').addEventListener('click', async () => {
+                    const amount = parseFloat(input.value);
+                    if (!amount || amount <= 0) { input.focus(); return; }
+                    try {
+                        await api('PATCH', `/savings-goals/${btn.dataset.id}/contribute`, { amount });
+                        wrapper.remove();
+                        showToast(`Aporte de ${fmt(amount)} agregado`, 'success');
+                        await loadAll();
+                    } catch (err) { showToast(err.message, 'error'); }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') wrapper.querySelector('.confirm-contribute').click();
+                    if (e.key === 'Escape') wrapper.remove();
+                });
+            });
+        });
 
         el.querySelectorAll('.del-goal').forEach(btn => {
             btn.addEventListener('click', async () => {
@@ -1224,15 +1299,22 @@ function renderGoals() {
 /* goal form */
 $('#add-goal-btn')?.addEventListener('click', () => {
     const f = $('#goal-form');
-    f.style.display = f.style.display === 'none' ? 'block' : 'none';
-    if (f.style.display === 'block') {
+    const isOpen = f.style.display === 'block';
+    f.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) {
+        state.editingGoalId = null;
         $('#goal-name').value = '';
         $('#goal-target').value = '';
         $('#goal-current').value = '0';
         $('#goal-deadline').value = '';
+        $('#submit-goal-btn').textContent = 'Crear meta';
     }
 });
-$('#cancel-goal')?.addEventListener('click', () => { $('#goal-form').style.display = 'none'; });
+$('#cancel-goal')?.addEventListener('click', () => {
+    $('#goal-form').style.display = 'none';
+    state.editingGoalId = null;
+    $('#submit-goal-btn').textContent = 'Crear meta';
+});
 $('#goal-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const nameField = $('#goal-name');
@@ -1250,10 +1332,17 @@ $('#goal-form')?.addEventListener('submit', async (e) => {
         deadline: $('#goal-deadline').value || null,
     };
     try {
-        await api('POST', '/savings-goals/', data);
+        if (state.editingGoalId) {
+            await api('PUT', `/savings-goals/${state.editingGoalId}`, data);
+            state.editingGoalId = null;
+            $('#submit-goal-btn').textContent = 'Crear meta';
+            showToast('Meta de ahorro actualizada', 'success');
+        } else {
+            await api('POST', '/savings-goals/', data);
+            showToast('Meta de ahorro creada', 'success');
+        }
         $('#goal-form').style.display = 'none';
         await loadAll();
-        showToast('Meta de ahorro creada', 'success');
     } catch (err) { showToast(err.message, 'error'); }
 });
 
@@ -1269,6 +1358,55 @@ function renderCategoryDatalist() {
    ============================================ */
 $('#export-btn')?.addEventListener('click', () => {
     window.open(API + '/transactions/export/csv', '_blank');
+});
+
+/* ============================================
+   SIDEBAR COLLAPSE
+   ============================================ */
+$('#sidebar-collapse-btn')?.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.toggle('collapsed');
+});
+
+/* ============================================
+   KEYBOARD SHORTCUTS
+   n        — abrir form nueva transacción
+   1-4      — cambiar de tab
+   /        — enfocar búsqueda de transacciones
+   Esc      — cerrar form / diálogos
+   ============================================ */
+const TAB_KEYS = { '1': 'dashboard', '2': 'budgets', '3': 'categories', '4': 'goals' };
+
+document.addEventListener('keydown', (e) => {
+    const target = e.target;
+    const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable);
+    const dialogOpen = document.querySelector('dialog[open]');
+
+    if (e.key === 'Escape') {
+        if (dialogOpen) { return; }
+        if ($('#transaction-form')?.classList.contains('open')) { resetTxForm(); return; }
+        if ($('#budget-form')?.style.display === 'block') { $('#cancel-budget')?.click(); return; }
+        if ($('#goal-form')?.style.display === 'block') { $('#cancel-goal')?.click(); return; }
+        return;
+    }
+
+    if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+
+    if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        switchTab('dashboard').then(() => toggleTxForm(true));
+        return;
+    }
+    if (e.key === '/') {
+        if (currentTab !== 'dashboard') return;
+        e.preventDefault();
+        switchTab('dashboard').then(() => $('#filter-search')?.focus());
+        return;
+    }
+    if (TAB_KEYS[e.key]) {
+        e.preventDefault();
+        _switchTab(TAB_KEYS[e.key]);
+        return;
+    }
 });
 
 /* ============================================
